@@ -1,3 +1,7 @@
+'''
+This script just pulls the 100 most recent messages from the Messages app on macOS.
+Use it to make sure you have proper database connection.
+'''
 import sqlite3
 import os
 
@@ -34,16 +38,13 @@ def get_imessages():
         LIMIT 100
     """
 
-    # Execute the query
+    # Execute the query, fetch results, & return
     cursor.execute(query)
 
-    # Fetch all results
     messages = cursor.fetchall()
 
-    # Close the connection
     conn.close()
 
-    # Return the messages
     return messages
 
 
