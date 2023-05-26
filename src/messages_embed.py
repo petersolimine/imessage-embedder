@@ -51,30 +51,25 @@ def get_imessages():
     # Close the connection
     conn.close()
 
-    # Organize messages into conversations
-    conversations = defaultdict(list)
-    for message in raw_messages:
-        date, is_from_me, chat_identifier, text = message
-        sender = "Me" if is_from_me else chat_identifier
-        conversations[chat_identifier].append((date, sender, text))
-    
-    # Return the conversations
-    return conversations.values()
+    return raw_messages
 
-def initialize_chroma(conversations):
+def initialize_chroma(messages):
 
     collection = client.create_collection("messages")
 
     # list from 1 to len(documents)
-    ids = list(range(1, len(conversations) + 1))
+    ids = list(range(1, len(messages) + 1))
     
     #convert ids to string 
     ids = [str(i) for i in ids]
 
+
+
     collection.add(
-        documents=conversations,
+        documents=messages,
         ids=ids
     )
+    print("added messages to collection")
 
     results = collection.query(
         query_texts=["uplifting message"],
@@ -89,10 +84,13 @@ def initialize_chroma(conversations):
 
 def main():
     # Get the iMessages
-    conversations = get_imessages()
+    messages = get_imessages()
+
+    # Organize messages (tuple) into strings
+    messages = [message[3] for message in messages]
 
     # Initialize Chroma
-    initialize_chroma(conversations)
+    initialize_chroma(messages)
 
 
 if __name__ == "__main__":
