@@ -4,12 +4,11 @@ TODO: load into chroma
 '''
 import os
 import sqlite3
-from collections import defaultdict
-from langchain.vectorstores import Chroma
-from langchain.embeddings import OpenAIEmbeddings
 
+from chromadb.config import Settings
 import chromadb
-client = chromadb.Client()
+client = chromadb.Client(Settings(chroma_db_impl='duckdb+parquet',persist_directory=".data"
+))
 
 # Define the path to the chat.db database
 db_path = os.path.expanduser('~/Library/Messages/chat.db')
@@ -27,7 +26,7 @@ def get_imessages():
             datetime(message.date/1000000000 + strftime("%s", "2001-01-01") ,"unixepoch","localtime") as date, 
             message.is_from_me, 
             chat.chat_identifier, 
-            message.text 
+            message.text
         FROM 
             message 
         LEFT JOIN 
@@ -51,47 +50,67 @@ def get_imessages():
     # Close the connection
     conn.close()
 
+    print(raw_messages)
+
     return raw_messages
 
 def initialize_chroma(messages):
 
-    collection = client.create_collection("messages")
-
-    # list from 1 to len(documents)
-    ids = list(range(1, len(messages) + 1))
+    # try to get collection. If it doesn't exist, create it.
+    try: 
+        collection = client.get_collection("messages")
+    except:
+        collection = client.create_collection("messages")
     
-    #convert ids to string 
+    # Create list of IDs based on number of messages
+    ids = list(range(1, len(messages) + 1))
     ids = [str(i) for i in ids]
 
-
-
+    # Add the messages to the Chroma collection
     collection.add(
         documents=messages,
-        ids=ids
+        ids=ids,
     )
+    
     print("added messages to collection")
 
-    results = collection.query(
+    uplifting_messages = collection.query(
         query_texts=["uplifting message"],
-        n_results=1,
+        n_results=10,
     )
 
-    # Persist the Chroma database
-    client.persist()
+    print(uplifting_messages)
 
-    print(results)
+    hilarious_story = collection.query(
+    query_texts=["hilarious story"],
+    n_results=10,
+    )
+
+    print(hilarious_story)
+
+    # Persist the Chroma database TODO: uncomment. Figure out how to load from persist_directory
+    # client.persist()
 
 
 def main():
     # Get the iMessages
-    messages = get_imessages()
+    raw_messages = get_imessages()
 
-    # Organize messages (tuple) into strings
-    messages = [message[3] for message in messages]
+    # Organize messages (tuple) into strings, ignoring None and empty strings
+    messages = [message[3] for message in raw_messages if message[3] is not None and message[3].strip() != ""]
 
     # Initialize Chroma
     initialize_chroma(messages)
 
-
 if __name__ == "__main__":
     main()
+
+
+'''
+TODO:
+
+- Figure out how to persist properly
+- Figure out how to load from persist_directory
+- Add metadata to messages
+
+'''

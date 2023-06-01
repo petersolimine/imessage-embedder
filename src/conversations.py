@@ -8,8 +8,11 @@ from collections import defaultdict
 from langchain.vectorstores import Chroma
 from langchain.embeddings import OpenAIEmbeddings
 
+
+from chromadb.config import Settings
 import chromadb
-client = chromadb.Client()
+client = chromadb.Client(Settings(chroma_db_impl='duckdb+parquet',persist_directory=".conversations"
+))
 
 # Define the path to the chat.db database
 db_path = os.path.expanduser('~/Library/Messages/chat.db')
