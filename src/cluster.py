@@ -8,11 +8,16 @@ import hdbscan
 from chromadb.config import Settings
 import chromadb
 
+'''
+For more on UMAP, see here: https://umap-learn.readthedocs.io/en/latest/clustering.html
+And HDBSCAN: https://hdbscan.readthedocs.io/en/latest/index.html
+'''
+
 client = chromadb.Client(Settings(chroma_db_impl='duckdb+parquet',persist_directory=".data"
 ))
 
 def cluster_messages():
-    # Load the messages from the database
+    # Load the messages
     collection = client.get_collection("messages")
     coll_dict = collection.get(include=['embeddings', 'documents'])
     embeddings = coll_dict['embeddings']
