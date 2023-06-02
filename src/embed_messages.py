@@ -6,6 +6,11 @@ import os
 import sqlite3
 
 from chromadb.config import Settings
+from chromadb.utils import embedding_functions
+# openai_ef = embedding_functions.OpenAIEmbeddingFunction(
+#                 api_key="sk-",
+#                 model_name="text-embedding-ada-002"
+#             )
 import chromadb
 client = chromadb.Client(Settings(chroma_db_impl='duckdb+parquet',persist_directory=".data"
 ))
@@ -50,8 +55,6 @@ def get_imessages():
     # Close the connection
     conn.close()
 
-    print(raw_messages)
-
     return raw_messages
 
 def initialize_chroma(messages):
@@ -67,29 +70,14 @@ def initialize_chroma(messages):
     ids = [str(i) for i in ids]
 
     # Add the messages to the Chroma collection
-    collection.add(
+    collection.upsert(
         documents=messages,
         ids=ids,
     )
-    
-    print("added messages to collection")
 
-    uplifting_messages = collection.query(
-        query_texts=["uplifting message"],
-        n_results=10,
-    )
+    client.persist()
 
-    print(uplifting_messages)
-
-    hilarious_story = collection.query(
-    query_texts=["hilarious story"],
-    n_results=10,
-    )
-
-    print(hilarious_story)
-
-    # Persist the Chroma database TODO: uncomment. Figure out how to load from persist_directory
-    # client.persist()
+    return collection
 
 
 def main():
@@ -100,7 +88,18 @@ def main():
     messages = [message[3] for message in raw_messages if message[3] is not None and message[3].strip() != ""]
 
     # Initialize Chroma
-    initialize_chroma(messages)
+    collection = initialize_chroma(messages)
+
+    while True:
+        query = input("Enter a query: ")
+        if query == "exit":
+            break
+        
+        results = collection.query(
+            query_texts=[query],
+            n_results=5,
+        )
+        print(results)
 
 if __name__ == "__main__":
     main()
@@ -108,9 +107,6 @@ if __name__ == "__main__":
 
 '''
 TODO:
-
-- Figure out how to persist properly
-- Figure out how to load from persist_directory
 - Add metadata to messages
-
+- while true for querying
 '''
