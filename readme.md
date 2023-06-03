@@ -1,63 +1,91 @@
-# imessage-embedder
+# iMessage Embedder :iphone::rocket:
 
-The goal of this project is to pull all your imessages from Mac automatically so that you can do fun stuff with them
-as embeddings.
+Welcome to the iMessage Embedder project! We provide an intuitive way for you to extract your iMessages from a Mac and convert them into 'embeddings' - mathematical representations of data. Leveraging these embeddings, you can perform some fascinating operations on your message data and gain insights you never thought possible.
 
-This only works on Mac.
+_**Note:** This only works on macOS._
 
-## Usage
+---
 
-1. First and foremost, you need to give Terminal access to your imessages. Follow the steps below:
+## :wrench: Getting Started
 
-As of macOS Mojave, you may need to give your terminal "Full Disk Access" in order to allow Python (terminal, jupyter) to access the iMessage database.
+Here are the steps you need to follow to get this tool up and running:
 
-    1. Open System Preferences.
-    2. Go to Security & Privacy.
-    3. Select the Privacy tab.
-    4. Scroll down in the list and click on Full Disk Access.
-    5. Click the lock in the bottom left to make changes. Enter your password when prompted.
-    6. Click the '+' button to add an application, then navigate to your terminal application (usually located in /Applications/Utilities/).
-    7. Close the System Preferences.
-    8. Quit and reopen
-    9. After granting Full Disk Access to your terminal, rerun script.
-    * if you are using the VSCode embedded terminal, you will need to grant access to the VSCode app, not the terminal.
+### Step 1: Give Terminal Access to Your iMessages
 
-2. Install packages
-   `pip install -r requirements.txt`
+**Important:** As of macOS Mojave, you will need to grant your Terminal "Full Disk Access". This allows Python to interact with your iMessage database. Please follow the steps below to grant this access:
 
-3. Now we pull our text messages and use Chroma to create and store embeddings
+1. Open your **System Preferences**.
+2. Navigate to **Security & Privacy**.
+3. Select the **Privacy** tab.
+4. Scroll down in the list and click on **Full Disk Access**.
+5. Click the lock in the bottom left to allow changes. You'll be prompted to enter your password.
+6. Click the '+' button to add an application. You should locate your Terminal application, usually found in `/Applications/Utilities/`.
+7. Close the **System Preferences**.
+8. Quit and reopen your Terminal.
+9. After granting Full Disk Access to your Terminal, rerun the script.
+   - _**Note:** If you're using the VSCode embedded terminal, you'll need to grant access to the VSCode app, not the Terminal._
 
-   `python src/embed_messages.py`
+### Step 2: Install Required Packages
 
-This might take a few minutes, just let it cook.
+Run the following command in your Terminal to install the required Python packages:
 
-\*optional: you can also stitch together and embed full conversation threads, like so:
+replaceme
+pip install -r requirements.txt
+replaceme
 
-`python src/embed_conversations.py`
+### Step 3: Pull Your iMessages and Create Embeddings
 
-Nice! Now, here are a few fun things you can do with your imessage embeddings:
+Execute the following command:
 
-### 1. Semantic search queries against your message or conversation history
+replaceme
+python src/embed_messages.py
+replaceme
 
-try it out: `python src/query.py`
+This might take a few minutes, so hang tight and let the script do its work.
 
-### 2. Cluster your imessage history
+_**Optional:** If you'd like to stitch together and embed full conversation threads, use this command:_
 
-try it out: `python src/cluster.py`
+replaceme
+python src/embed_conversations.py
+replaceme
+
+---
+
+## :tada: Let's Have Some Fun With Your iMessage Embeddings
+
+Now that you have your iMessage embeddings, here are a few fun and interactive things you can do:
+
+### 1. Semantic Search Queries Against Your Message or Conversation History
+
+Try out this feature using the following command:
+
+replaceme
+python src/query.py
+replaceme
+
+### 2. Cluster Your iMessage History
+
+Group your messages based on patterns and themes:
+
+replaceme
+python src/cluster.py
+replaceme
 
 <details>
 <summary>
-A note on clustering:
+Click here for more details on clustering:
 </summary>
-The aim of this clustering is to discover patterns and structure within imessage history, for instance grouping similar messages together and identifying key themes within groups. Here's the process:
 
-Clustering: Messages & embeddngs are loaded from chroma, and the embeddings are used to perform dimensionality reduction and clustering.
+This clustering process is designed to discover patterns and structure within your iMessage history. Here's a brief overview:
 
-Cluster Analysis: Each unique cluster is analyzed individually. This involves keyword extraction (using TF-IDF vectorization) to find the most important words for each cluster, and topic modeling (using LDA) to identify the key themes within the cluster.
+- **Clustering:** Messages and their embeddings are loaded from Chroma, which are then used for dimensionality reduction and clustering.
 
-Cluster Representatives: For each cluster, a representative message (or set of messages) is identified. This is typically the message(s) that is/are closest to the geometric center of the cluster. This representative can provide a snapshot of what the messages in the cluster are like.
+- **Cluster Analysis:** Each unique cluster is individually analyzed, involving keyword extraction (using TF-IDF vectorization) to pinpoint the most significant words for each cluster, and topic modeling (using LDA) to identify the key themes within the cluster.
 
-Visualization: I made an effort to visualize this data so that the structure can be understand at a glance. Different visualizations are offered depending how much data has been embedded. 4 options are available for labeling:
+- **Cluster Representatives:** A representative message or set of messages is identified for each cluster, typically the one(s) closest to the geometric center of the cluster. This representative provides an overview of what the messages in the cluster look like.
+
+- **Visualization:** We've made an effort to visualize this data so you can grasp the structure at a glance. Different visualizations are offered depending on how much data has been embedded. Four
+  options are available for labeling:
 
 Viewing clusters without labels,
 With representative labels,
