@@ -42,6 +42,8 @@ try it out: `python src/query.py`
 
 2. Cluster your imessage history
 
+try it out: `python src/cluster.py`
+
 <details>
 A note on clustering:
 <summary>
@@ -62,3 +64,5 @@ with all data points labeled, (NOT recommended but kinda fun)
 
 </summary>
 </details>
+
+Powered by [Chroma](https://trychroma.com) 🚀
