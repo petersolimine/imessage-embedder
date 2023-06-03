@@ -4,6 +4,8 @@ import sqlite3
 from chromadb.config import Settings
 from chromadb.utils import embedding_functions
 
+from utils import format_query_results
+
 import chromadb
 client = chromadb.Client(Settings(chroma_db_impl='duckdb+parquet',persist_directory=".data"
 ))
@@ -88,16 +90,6 @@ def initialize_chroma(messages):
     print("collection persisted to disk")
 
     return collection
-
-def format_query_results(results):
-    for i in range(len(results['ids'][0])):
-        print("\n-------------------------------------------------")
-        print(f"Result {i+1}:")
-        print("ID:", results['ids'][0][i])
-        print("Document:\n", results['documents'][0][i])
-        print("Metadata:\n", results['metadatas'][0][i])
-        print("Distance:", results['distances'][0][i])
-        print("-------------------------------------------------\n")
 
 
 def main():
