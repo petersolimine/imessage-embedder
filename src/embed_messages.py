@@ -1,16 +1,9 @@
-'''
-Pull all messages and organize them by conversation
-TODO: load into chroma
-'''
 import os
 import sqlite3
 
 from chromadb.config import Settings
 from chromadb.utils import embedding_functions
-# openai_ef = embedding_functions.OpenAIEmbeddingFunction(
-#                 api_key="sk-",
-#                 model_name="text-embedding-ada-002"
-#             )
+
 import chromadb
 client = chromadb.Client(Settings(chroma_db_impl='duckdb+parquet',persist_directory=".data"
 ))
@@ -58,37 +51,60 @@ def get_imessages():
     return raw_messages
 
 def initialize_chroma(messages):
-
     # try to get collection. If it doesn't exist, create it.
     try: 
         collection = client.get_collection("messages")
+        print("collection already exists")
+        return collection
     except:
         collection = client.create_collection("messages")
-    
-    # Create list of IDs based on number of messages
-    ids = list(range(1, len(messages) + 1))
-    ids = [str(i) for i in ids]
 
+    # Convert raw_messages into documents with metadata fields
+    documents = []
+    metadatas = []
+    ids = []
+    id_counter = 1
+    for msg in messages:
+        if msg[3] is not None and msg[3].strip() != "":
+            document = msg[3]
+            metadata = {
+                "date": msg[0], 
+                "is_from_me": bool(msg[1]), 
+                "chat_id": msg[2]
+            }
+            documents.append(document)
+            metadatas.append(metadata)
+            ids.append(str(id_counter))
+            id_counter += 1
+    
     # Add the messages to the Chroma collection
     collection.upsert(
-        documents=messages,
+        documents=documents,
         ids=ids,
+        metadatas=metadatas
     )
 
     client.persist()
 
     return collection
 
+def format_query_results(results):
+    for i in range(len(results['ids'][0])):
+        print("\n-------------------------------------------------")
+        print(f"Result {i+1}:")
+        print("ID:", results['ids'][0][i])
+        print("Document:\n", results['documents'][0][i])
+        print("Metadata:\n", results['metadatas'][0][i])
+        print("Distance:", results['distances'][0][i])
+        print("-------------------------------------------------\n")
+
 
 def main():
     # Get the iMessages
     raw_messages = get_imessages()
 
-    # Organize messages (tuple) into strings, ignoring None and empty strings
-    messages = [message[3] for message in raw_messages if message[3] is not None and message[3].strip() != ""]
-
     # Initialize Chroma
-    collection = initialize_chroma(messages)
+    collection = initialize_chroma(raw_messages)
 
     while True:
         query = input("Enter a query: ")
@@ -96,17 +112,10 @@ def main():
             break
         
         results = collection.query(
-            query_texts=[query],
-            n_results=5,
+        query_texts=[query],
+        n_results=5,
         )
-        print(results)
+        format_query_results(results)
 
 if __name__ == "__main__":
     main()
-
-
-'''
-TODO:
-- Add metadata to messages
-- while true for querying
-'''

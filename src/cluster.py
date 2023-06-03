@@ -19,9 +19,9 @@ client = chromadb.Client(Settings(chroma_db_impl='duckdb+parquet',persist_direct
 def cluster_messages():
     # Load the messages
     collection = client.get_collection("messages")
-    coll_dict = collection.get(include=['embeddings', 'documents'])
-    embeddings = coll_dict['embeddings']
-    messages = coll_dict['documents']
+    collection_dict = collection.get(include=['embeddings', 'documents'])
+    embeddings = collection_dict['embeddings']
+    messages = collection_dict['documents']
 
     # Perform dimensionality reduction using UMAP
     umap_embedding = umap.UMAP(

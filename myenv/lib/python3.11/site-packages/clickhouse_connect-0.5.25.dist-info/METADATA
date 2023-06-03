@@ -1,0 +1,65 @@
+Metadata-Version: 2.1
+Name: clickhouse-connect
+Version: 0.5.25
+Summary: ClickHouse core driver, SqlAlchemy, and Superset libraries
+Home-page: https://github.com/ClickHouse/clickhouse-connect
+Author: ClickHouse Inc.
+Author-email: clients@clickhouse.com
+License: Apache License 2.0
+Keywords: clickhouse,superset,sqlalchemy,http,driver
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: ~=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: certifi
+Requires-Dist: urllib3 (>=1.26)
+Requires-Dist: pytz
+Requires-Dist: zstandard
+Requires-Dist: lz4
+Provides-Extra: arrow
+Requires-Dist: pyarrow ; extra == 'arrow'
+Provides-Extra: numpy
+Requires-Dist: numpy ; extra == 'numpy'
+Provides-Extra: orjson
+Requires-Dist: orjson ; extra == 'orjson'
+Provides-Extra: pandas
+Requires-Dist: pandas ; extra == 'pandas'
+Provides-Extra: sqlalchemy
+Requires-Dist: sqlalchemy (<1.4,>1.3.21) ; extra == 'sqlalchemy'
+Provides-Extra: superset
+Requires-Dist: apache-superset (>=1.4.1) ; extra == 'superset'
+
+## ClickHouse Connect
+
+A suite of Python packages for connecting Python to ClickHouse:
+* Pandas DataFrames
+* Numpy Arrays
+* PyArrow Tables
+* SQLAlchemy 1.3 and 1.4 (limited feature set)
+* Apache Superset 1.4+
+
+
+### Warning -- ZStd errors with versions 0.5.21 and below
+Versions prior to 0.5.22 are not compatible with urllib3 version 2+ when using zstd compression.  If you encounter
+such errors please upgrade to clickhouse-connect 0.5.22+ or downgrade your urllib3 version to 1.x
+
+
+### Complete Documentation
+The documentation for ClickHouse Connect has moved to
+[ClickHouse Docs](https://clickhouse.com/docs/en/integrations/language-clients/python/intro) 
+
+
+### Installation
+
+```
+pip install clickhouse-connect
+```
+
+ClickHouse Connect requires Python 3.7 or higher.  
