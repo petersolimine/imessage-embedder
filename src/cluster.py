@@ -18,11 +18,20 @@ client = chromadb.Client(Settings(chroma_db_impl='duckdb+parquet',persist_direct
 def cluster_messages():
     # Load the messages
     collection = client.get_collection("messages")
-    collection_dict = collection.get(include=['embeddings', 'documents'])
+    
+    # return boolean for whether to retrieve all messages or just ones where "only me" is true
+    all_messages = input("\Cluster \n1. ALL messages or \n2. Only messages that YOU sent?\n")
+    while all_messages not in ["1", "2"]:
+        all_messages = input("\nPlease enter 1 or 2:\n")
+    
+    is_from_me = all_messages == "2"
+    
+    collection_dict = collection.get(include=['embeddings', 'documents'], where={"is_from_me": is_from_me})
     embeddings = collection_dict['embeddings']
     messages = collection_dict['documents']
 
     # Perform dimensionality reduction using UMAP
+    print("\nPerforming dimensionality reduction using UMAP...")
     umap_embedding = umap.UMAP(
         n_neighbors=30,
         min_dist=0.0,
@@ -30,10 +39,16 @@ def cluster_messages():
         random_state=42,
     ).fit_transform(embeddings)
 
+    # Ask for min_cluster_size
+    min_cluster_size = input("\nEnter minimum cluster size (Recommended=150):\n")
+    while not min_cluster_size.isdigit() or int(min_cluster_size) < 0:
+        min_cluster_size = input("\nPlease enter a positive integer:\n")
+    min_cluster_size = int(min_cluster_size)
+
     # Perform clustering using HDBSCAN
     labels = hdbscan.HDBSCAN(
         min_samples=10,
-        min_cluster_size=200,
+        min_cluster_size=min_cluster_size,
     ).fit_predict(umap_embedding)
 
     return labels, umap_embedding, messages
@@ -128,12 +143,13 @@ def visualize_top_representatives(labels, umap_embedding, representatives):
 def main():
     # Perform clustering on text messages
     labels, umap_embedding, messages = cluster_messages()
-
-    # Analyze the clusters
+    print('analyzing clusters...')
     analyze_clusters(labels, messages)
+    print('Number of clusters: ', len(np.unique(labels)))
 
-    # Get user input for visualization
-    option = input("Enter option for visualization (1: No Labels, 2: Representative Labels, 3: Top 10 Representatives per Cluster (RECOMMENDED), 4: Label All Data Points (NOT RECOMMENDED) ")
+    option = input("Enter option for visualization\n1: No Labels,\n2: Representative Labels,\n3: Top 10 Representatives per Cluster (RECOMMENDED),\n4: Label All Data Points (NOT RECOMMENDED)\n")
+    while option not in ["1", "2", "3", "4"]:
+        option = input("Invalid option. Please enter 1, 2, 3, or 4. ")
 
     if option == "1":
         # Visualize the clusters with no labels
@@ -156,9 +172,6 @@ def main():
     elif option == "4":
         # Visualize all data points with labels
         visualize_all_data_points(labels, umap_embedding, messages)
-
-    else:
-        print("Invalid option. Please enter 1, 2, 3, or 4.")
 
 if __name__ == "__main__":
     main()
