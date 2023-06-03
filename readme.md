@@ -29,25 +29,25 @@ Here are the steps you need to follow to get this tool up and running:
 
 Run the following command in your Terminal to install the required Python packages:
 
-replaceme
+```
 pip install -r requirements.txt
-replaceme
+```
 
 ### Step 3: Pull Your iMessages and Create Embeddings
 
 Execute the following command:
 
-replaceme
+```
 python src/embed_messages.py
-replaceme
+```
 
 This might take a few minutes, so hang tight and let the script do its work.
 
 _**Optional:** If you'd like to stitch together and embed full conversation threads, use this command:_
 
-replaceme
+```
 python src/embed_conversations.py
-replaceme
+```
 
 ---
 
@@ -59,17 +59,17 @@ Now that you have your iMessage embeddings, here are a few fun and interactive t
 
 Try out this feature using the following command:
 
-replaceme
+```
 python src/query.py
-replaceme
+```
 
 ### 2. Cluster Your iMessage History
 
 Group your messages based on patterns and themes:
 
-replaceme
+```
 python src/cluster.py
-replaceme
+```
 
 <details>
 <summary>
@@ -84,8 +84,7 @@ This clustering process is designed to discover patterns and structure within yo
 
 - **Cluster Representatives:** A representative message or set of messages is identified for each cluster, typically the one(s) closest to the geometric center of the cluster. This representative provides an overview of what the messages in the cluster look like.
 
-- **Visualization:** We've made an effort to visualize this data so you can grasp the structure at a glance. Different visualizations are offered depending on how much data has been embedded. Four
-  options are available for labeling:
+- **Visualization:** We've made an effort to visualize this data so you can grasp the structure at a glance. Different visualizations are offered depending on how much data has been embedded. Four options are available for labeling:
 
 Viewing clusters without labels,
 With representative labels,
