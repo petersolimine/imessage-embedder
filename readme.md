@@ -60,7 +60,7 @@ Now that you have your iMessage embeddings, here are a few fun and interactive t
 Try out this feature using the following command:
 
 ```
-python src/query_chroma.py
+python src/query.py
 ```
 
 ### 2. Cluster Your iMessage History
