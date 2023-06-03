@@ -20,6 +20,7 @@ As of macOS Mojave, you may need to give your terminal "Full Disk Access" in ord
     7. Close the System Preferences.
     8. Quit and reopen
     9. After granting Full Disk Access to your terminal, rerun script.
+    * if you are using the VSCode embedded terminal, you will need to grant access to the VSCode app, not the terminal.
 
 2. Install packages
    `pip install -r requirements.txt`
@@ -36,17 +37,18 @@ This might take a few minutes, just let it cook.
 
 Nice! Now, here are a few fun things you can do with your imessage embeddings:
 
-1. Semantic search queries against your message or conversation history
+### 1. Semantic search queries against your message or conversation history
 
 try it out: `python src/query.py`
 
-2. Cluster your imessage history
+### 2. Cluster your imessage history
 
 try it out: `python src/cluster.py`
 
 <details>
-A note on clustering:
 <summary>
+A note on clustering:
+</summary>
 The aim of this clustering is to discover patterns and structure within imessage history, for instance grouping similar messages together and identifying key themes within groups. Here's the process:
 
 Clustering: Messages & embeddngs are loaded from chroma, and the embeddings are used to perform dimensionality reduction and clustering.
@@ -62,7 +64,6 @@ With representative labels,
 With top 10 representatives per cluster (recommended), or
 with all data points labeled, (NOT recommended but kinda fun)
 
-</summary>
 </details>
 
 Powered by [Chroma](https://trychroma.com) 🚀

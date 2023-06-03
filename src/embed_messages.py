@@ -85,6 +85,7 @@ def initialize_chroma(messages):
     )
 
     client.persist()
+    print("collection persisted to disk")
 
     return collection
 
@@ -102,6 +103,7 @@ def format_query_results(results):
 def main():
     # Get the iMessages
     raw_messages = get_imessages()
+    print("Number of messages retrieved:", len(raw_messages))
 
     # Initialize Chroma
     collection = initialize_chroma(raw_messages)
