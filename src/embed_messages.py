@@ -7,7 +7,7 @@ from chromadb.utils import embedding_functions
 from utils import format_query_results
 
 import chromadb
-client = chromadb.Client(Settings(chroma_db_impl='duckdb+parquet',persist_directory=".data"
+client = chromadb.Client(Settings(chroma_db_impl='duckdb+parquet',persist_directory="../.data"
 ))
 
 # Define the path to the chat.db database
@@ -56,8 +56,6 @@ def initialize_chroma(messages):
     # try to get collection. If it doesn't exist, create it.
     try: 
         collection = client.get_collection("messages")
-        print("collection already exists")
-        return collection
     except:
         collection = client.create_collection("messages")
 

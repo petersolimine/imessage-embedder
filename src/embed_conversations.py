@@ -4,9 +4,11 @@ from collections import defaultdict
 from chromadb.config import Settings
 import chromadb
 
+from utils import format_query_results
+
 print(chromadb.__version__) # should be 0.3.25 as of june 1st
 
-client = chromadb.Client(Settings(chroma_db_impl='duckdb+parquet',persist_directory=".data"
+client = chromadb.Client(Settings(chroma_db_impl='duckdb+parquet',persist_directory="../.data"
 ))
 
 # Define the path to the chat.db database
@@ -116,9 +118,9 @@ def main():
         
         results = collection.query(
             query_texts=[query],
-            n_results=1,
+            n_results=2,
         )
-        print(results)
+        format_query_results(results)
 
 if __name__ == "__main__":
     main()

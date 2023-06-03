@@ -12,7 +12,7 @@ For more on UMAP, see here: https://umap-learn.readthedocs.io/en/latest/clusteri
 And HDBSCAN: https://hdbscan.readthedocs.io/en/latest/index.html
 '''
 
-client = chromadb.Client(Settings(chroma_db_impl='duckdb+parquet',persist_directory=".data"
+client = chromadb.Client(Settings(chroma_db_impl='duckdb+parquet',persist_directory="../.data"
 ))
 
 def cluster_messages():
