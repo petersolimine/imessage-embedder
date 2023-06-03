@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import LatentDirichletAllocation as LDA
-from chromadb.utils import embedding_functions
 import umap
 import hdbscan
 from chromadb.config import Settings
@@ -134,7 +133,7 @@ def main():
     analyze_clusters(labels, messages)
 
     # Get user input for visualization
-    option = input("Enter option for visualization (1: No Labels, 2: Representative Labels, 3: Label All Data Points, 4: Top 10 Representatives per Cluster): ")
+    option = input("Enter option for visualization (1: No Labels, 2: Representative Labels, 3: Top 10 Representatives per Cluster (RECOMMENDED), 4: Label All Data Points (NOT RECOMMENDED) ")
 
     if option == "1":
         # Visualize the clusters with no labels
@@ -148,15 +147,15 @@ def main():
         visualize_clusters_option(labels, umap_embedding, representatives)
 
     elif option == "3":
-        # Visualize all data points with labels
-        visualize_all_data_points(labels, umap_embedding, messages)
-
-    elif option == "4":
         # Calculate top 10 representatives per cluster
         representatives = cluster_top_representatives(labels, umap_embedding, messages)
 
         # Visualize the clusters with top 10 representatives
         visualize_top_representatives(labels, umap_embedding, representatives)
+
+    elif option == "4":
+        # Visualize all data points with labels
+        visualize_all_data_points(labels, umap_embedding, messages)
 
     else:
         print("Invalid option. Please enter 1, 2, 3, or 4.")
