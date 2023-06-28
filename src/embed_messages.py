@@ -67,11 +67,18 @@ def initialize_chroma(messages):
     for msg in messages:
         if msg[3] is not None and msg[3].strip() != "":
             document = msg[3]
+
+            # Set default values in case metadata is None
+            default_date = "00" 
+            default_is_from_me = "false"  
+            default_chat_id = "00" 
+
             metadata = {
-                "date": msg[0], 
-                "is_from_me": bool(msg[1]), 
-                "chat_id": msg[2]
+                "date": msg[0] if msg[0] is not None else default_date, 
+                "is_from_me": str(msg[1]) if msg[1] is not None else default_is_from_me, 
+                "chat_id": msg[2] if msg[2] is not None else default_chat_id
             }
+
             documents.append(document)
             metadatas.append(metadata)
             ids.append(str(id_counter))
@@ -88,6 +95,7 @@ def initialize_chroma(messages):
     print("collection persisted to disk")
 
     return collection
+
 
 
 def main():
